@@ -1,9 +1,17 @@
 export default (property) => ({
   clearable : false,
   init() {
-    this.$nextTick(() => this.clearable = this.$refs[property].value !== '');
+    // Check initial value immediately
+    this.clearable = this.$refs[property].value !== '';
+    
+    // Also check after next tick in case value is set asynchronously
+    this.$nextTick(() => {
+      this.clearable = this.$refs[property].value !== '';
+    });
 
-    this.$refs[property].addEventListener('input', () => this.clearable = this.$refs[property].value !== '');
+    this.$refs[property].addEventListener('input', () => {
+      this.clearable = this.$refs[property].value !== '';
+    });
   },
   /**
    * Clear the input value
